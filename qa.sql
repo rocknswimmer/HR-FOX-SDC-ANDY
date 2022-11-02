@@ -34,7 +34,7 @@ CREATE TABLE questions (
   asker_name VARCHAR(60) NOT NULL DEFAULT NULL,
   asker_email VARCHAR(200) NOT NULL DEFAULT NULL,
   reported BOOLEAN NOT NULL DEFAULT false,
-  question_helpfulness INTEGER NOT NULL DEFAULT NULL,
+  helpful INTEGER NOT NULL DEFAULT NULL,
   PRIMARY KEY (id)
 );
 
@@ -49,9 +49,11 @@ CREATE TABLE answers (
   id INTEGER NOT NULL DEFAULT NULL,
   question_id INTEGER NOT NULL DEFAULT NULL references questions(id),
   body TEXT NOT NULL DEFAULT NULL,
-  "date" TEXT NULL DEFAULT NULL,
+  date_written TEXT NULL DEFAULT NULL,
   answerer_name VARCHAR(60) NOT NULL DEFAULT NULL,
-  helpfulness INTEGER NOT NULL DEFAULT NULL,
+  answerer_email VARCHAR(200) NOT NULL DEFAULT NULL,
+  reported BOOLEAN NOT NULL DEFAULT false,
+  helpful INTEGER NOT NULL DEFAULT NULL,
   PRIMARY KEY (id)
 );
 
