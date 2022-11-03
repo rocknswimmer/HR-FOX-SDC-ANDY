@@ -56,10 +56,32 @@ app.get('/qa/questions/:question_id/answers', (req, res) => {
 //   });
 // });
 
+//question helpful
+app.put('/qa/questions/:question_id/helpful', (req, res) => {
+       // should probably change if wanted to track # of reports but goint for simplicity first
+  pool.query('UPDATE questions SET helpful = helpful + 1 WHERE id = $1', [req.params.question_id ],  (err, data) => {
+    if (err) {
+      throw err;
+    }
+    res.send(data.rows);
+  });
+});
+
 //report questions
 app.put('/qa/questions/:question_id/report', (req, res) => {
-  let count = req.query.count || 5;        // should probably change if wanted to track # of reports but goint for simplicity first
+       // should probably change if wanted to track # of reports but goint for simplicity first
   pool.query('UPDATE questions SET reported = $1 WHERE id = $2', [true, req.params.question_id ],  (err, data) => {
+    if (err) {
+      throw err;
+    }
+    res.send(data.rows);
+  });
+});
+
+//answer helpful
+app.put('/qa/answers/:answer_id/helpful', (req, res) => {
+       // should probably change if wanted to track # of reports but goint for simplicity first
+  pool.query('UPDATE answers SET helpful = helpful + 1 WHERE id = $1', [req.params.answer_id ],  (err, data) => {
     if (err) {
       throw err;
     }
@@ -69,7 +91,7 @@ app.put('/qa/questions/:question_id/report', (req, res) => {
 
 //report answers
 app.put('/qa/answers/:answer_id/report', (req, res) => {
-  let count = req.query.count || 5;        // should probably change if wanted to track # of reports but goint for simplicity first
+       // should probably change if wanted to track # of reports but goint for simplicity first
   pool.query('UPDATE answers SET reported = $1 WHERE id = $2', [true, req.params.answer_id ],  (err, data) => {
     if (err) {
       throw err;
