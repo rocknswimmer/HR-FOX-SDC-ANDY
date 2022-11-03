@@ -62,17 +62,11 @@ app.post('/qa/questions/', (req, res) => {
   let { body, name, email, product_id } = req.body;
   let date = new Date().getTime();
 
-  pool.query('select count(*) from questions', (err, data) => {
+  pool.query('INSERT INTO questions (product_id, body, date_written, asker_name, asker_email, reported, helpful) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *', [product_id, body, date, name, email, false, 0], (err, data) => {
     if (err) {
       throw err;
     }
-    let id = Number(data.rows[0].count) + 1;
-    pool.query('INSERT INTO questions (id, product_id, body, date_written, asker_name, asker_email, reported, helpful) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *', [id, product_id, body, date, name, email, false, 0], (err, data) => {
-      if (err) {
-        throw err;
-      }
-      res.send(data.rows);
-    });
+    res.send(data.rows);
   });
 });
 
@@ -83,20 +77,29 @@ app.post('/qa/questions/:question_id/answers', (req, res) => {
   let { body, name, email, photos } = req.body;
   let date = new Date().getTime();
 
-  pool.query('select count(*) from answers', (err, data) => {
-    if (err) {
-      throw err;
-    }
-    let id = Number(data.rows[0].count) + 1;
-    pool.query('INSERT INTO answers (id, question_id, body, date_written, answerer_name, answerer_email, reported, helpful) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *', [id, req.params.question_id, body, date, name, email, false, 0], (err, data) => {
-      if (err) {
-        throw err;
-      }
-      res.send(data.rows);
-    });
-  });
+  console.log('here? 1');
+
+  pool.query(`INSERT INTO answers (question_id, body, date_written, answerer_name, answerer_email, reported, helpful) VALUES (${req.params.question_id}, '${body}', '${date}', '${name}', '${email}', ${false}, ${Number(0)}) RETURNING id`)
+   .then((data) => {
+    console.log('here? 2');
+     if ((photos.length !== undefined) && (photos.length > 0)) {
+      console.log('here? 3');
+       let promises = photos.map((photo) => (pool.query(`INSERT INTO photos (answer_id, url) VALUES (${data.rows[0].id}, '${photo}') RETURNING *`)));
+       Promise.all(promises).then(() => { res.send(data.rows); }).catch((err) => { throw err })
+     } else {
+      console.log('here? 4');
+       res.send(data.rows);
+     }
+   }).catch((err) => {
+    console.log('here? 5');
+    throw err;
+   })
 });
 
+
+
+
+// pool.query('INSERT INTO photos (id, answer_id, "url") VALUES ($1, $2, $3) RETURNING *', [])
 
 //question helpful
 app.put('/qa/questions/:question_id/helpful', (req, res) => {

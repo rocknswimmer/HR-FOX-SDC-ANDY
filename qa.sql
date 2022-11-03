@@ -27,7 +27,7 @@ DROP TABLE IF EXISTS questions;
 --
 -- ---
 CREATE TABLE questions (
-  id INTEGER NOT NULL DEFAULT NULL,
+  id SERIAL,
   product_id INTEGER NOT NULL DEFAULT NULL,
   body TEXT NOT NULL DEFAULT NULL,
   date_written TEXT NOT NULL DEFAULT NULL,
@@ -46,7 +46,7 @@ CREATE TABLE questions (
 
 
 CREATE TABLE answers (
-  id INTEGER NOT NULL DEFAULT NULL,
+  id SERIAL,
   question_id INTEGER NOT NULL DEFAULT NULL references questions(id),
   body TEXT NOT NULL DEFAULT NULL,
   date_written TEXT NULL DEFAULT NULL,
@@ -69,7 +69,7 @@ CREATE TABLE answers (
 
 
 CREATE TABLE photos (
-  id INTEGER NOT NULL DEFAULT NULL,
+  id SERIAL,
   answer_id INTEGER NOT NULL DEFAULT NULL references answers(id),
   "url" TEXT NOT NULL DEFAULT NULL
 );
