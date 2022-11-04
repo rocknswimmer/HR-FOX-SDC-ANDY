@@ -44,10 +44,12 @@ app.get('/qa/questions/', (req, res) => {
   });
 });
 
+// `SELECT * FROM answers WHERE question_id = ${req.params.question_id} ORDER BY id LIMIT ${count}`
+//
 //get answers
 app.get('/qa/questions/:question_id/answers', (req, res) => {
   let count = req.query.count || 5;
-  pool.query(`SELECT * FROM answers WHERE question_id = ${req.params.question_id} ORDER BY id LIMIT ${count}`, (err, data) => {
+  pool.query(`select json_agg(answers) as results from (select id as answer_id, body, date_written as date, answerer_name, helpful as helpfulness, (select array_agg(ph) from (select id, url from photos where answer_id = answers.id)ph ) as photos from answers where question_id = ${req.params.question_id} and reported = false ORDER BY id LIMIT ${count}) as answers;`, (err, data) => {
     if (err) {
       throw err;
     }
