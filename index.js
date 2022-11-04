@@ -77,21 +77,15 @@ app.post('/qa/questions/:question_id/answers', (req, res) => {
   let { body, name, email, photos } = req.body;
   let date = new Date().getTime();
 
-  console.log('here? 1');
-
   pool.query(`INSERT INTO answers (question_id, body, date_written, answerer_name, answerer_email, reported, helpful) VALUES (${req.params.question_id}, '${body}', '${date}', '${name}', '${email}', ${false}, ${Number(0)}) RETURNING id`)
    .then((data) => {
-    console.log('here? 2');
      if ((photos.length !== undefined) && (photos.length > 0)) {
-      console.log('here? 3');
        let promises = photos.map((photo) => (pool.query(`INSERT INTO photos (answer_id, url) VALUES (${data.rows[0].id}, '${photo}') RETURNING *`)));
        Promise.all(promises).then(() => { res.send(data.rows); }).catch((err) => { throw err })
      } else {
-      console.log('here? 4');
        res.send(data.rows);
      }
    }).catch((err) => {
-    console.log('here? 5');
     throw err;
    })
 });
