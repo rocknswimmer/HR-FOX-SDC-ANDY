@@ -74,6 +74,14 @@ CREATE TABLE photos (
   "url" TEXT NOT NULL DEFAULT NULL
 );
 
+
+CREATE INDEX question_index ON questions (id);
+CREATE INDEX answer_index ON answers (id);
+CREATE INDEX photo_index ON photos (id);
+CREATE INDEX questionID_index ON answers (question_id);
+CREATE INDEX answerID_index ON photos (answer_id);
+CREATE INDEX productID_index ON questions (product_id);
+
 -- ---
 -- Foreign Keys
 -- ---
