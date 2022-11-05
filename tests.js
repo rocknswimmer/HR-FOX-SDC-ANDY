@@ -2,7 +2,7 @@ import http from 'k6/http';
 import { sleep, check, group } from 'k6';
 
 export const options = {
-  vus: 1000,
+  vus: 10,
   duration: '13s'
 };
 
@@ -108,8 +108,8 @@ export default function test() {
     });
   });
   group('answersPost', () => {
-    let data = {"photos": ["http://res.cloudinary.com/dqmnjwd2c/image/upload/v1666744414/bettertinycat_alwhku.jpg"], "body": "I can add answers with photos now to db from tests", "email":"fake@test.com", "name":"and e"};
-    const answersPostResponse = http.put(answersPost, data);
+    let data = {'photos': ["http://res.cloudinary.com/dqmnjwd2c/image/upload/v1666744414/bettertinycat_alwhku.jpg"], "body": 'I can add answers with photos now to db from tests', "email":'fake@test.com', "name":'and e'};
+    const answersPostResponse = http.post(answersPost, data);
     check(answersPostResponse, {
       'transaction time < 10ms': (r) => r.timings.duration < 10,
       'transaction time < 50ms': (r) => r.timings.duration < 50,
@@ -124,8 +124,8 @@ export default function test() {
     });
   });
   group('questionsPost', () => {
-    let data = {"product_id": 1, "body": "can I add to db from tests?", "email":"fake@test.com", "name":"and e"};
-    const questionsPostResponse = http.put(questionsPost, data);
+    let data = {product_id: 1, body: 'can I add to db from tests?', email:'fake@test.com', name:'and e'};
+    const questionsPostResponse = http.post(questionsPost, data);
     check(questionsPostResponse, {
       'transaction time < 10ms': (r) => r.timings.duration < 10,
       'transaction time < 50ms': (r) => r.timings.duration < 50,

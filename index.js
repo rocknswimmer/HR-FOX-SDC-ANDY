@@ -90,7 +90,7 @@ app.post('/qa/questions/:question_id/answers', (req, res) => {
 
   pool.query(`INSERT INTO answers (question_id, body, date_written, answerer_name, answerer_email, reported, helpful) VALUES (${req.params.question_id}, '${body}', '${date}', '${name}', '${email}', ${false}, ${Number(0)}) RETURNING id`)
    .then((data) => {
-     if ((photos.length !== undefined) && (photos.length > 0)) {
+     if ((Array.isArray(photos)) && (photos.length > 0)) {
        let promises = photos.map((photo) => (pool.query(`INSERT INTO photos (answer_id, url) VALUES (${data.rows[0].id}, '${photo}') RETURNING *`)));
        Promise.all(promises).then(() => { res.send(data.rows); }).catch((err) => { throw err })
      } else {
