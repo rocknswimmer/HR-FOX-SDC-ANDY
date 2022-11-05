@@ -40,7 +40,12 @@ app.get('/qa/questions/', (req, res) => {
     if (err) {
       throw err;
     }
-    res.send(data.rows);
+    let results = {
+      product_id: req.query.product_id,
+      results: data.rows[0].results
+    };
+
+    res.send(results);
   });
 });
 
@@ -51,7 +56,13 @@ app.get('/qa/questions/:question_id/answers', (req, res) => {
     if (err) {
       throw err;
     }
-    res.send(data.rows);
+    let results = {
+      question: req.params.question_id,
+      page: 1,
+      count: count,
+      results: data.rows[0].results
+    };
+    res.send(results);
   });
 });
 
