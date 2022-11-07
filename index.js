@@ -36,7 +36,7 @@ app.get('/', (request, response) => {
 //get questions
 app.get('/qa/questions/', (req, res) => {
   let count = req.query.count || 5;
-  pool.query(`select json_agg(questions) as results from (select id as question_id, body as question_body, date_written as question_date, asker_name, helpful as question_helpfulness, reported, (select json_agg(answers) from (select id as answer_id, body, date_written as date, answerer_name, helpful as helpfulness, (select json_agg(url) from photos where answer_id = answers.id) as photos from answers where question_id = questions.id and reported = false ORDER BY id) answers ) as answers from questions where product_id = ${req.query.product_id} and reported = false order by id limit ${count}) as questions;`, (err, data) => {
+  pool.query(`select json_agg(questions) as results from (select id as question_id, body as question_body, date_written as question_date, asker_name, helpful as question_helpfulness, reported, (select json_agg(answers) from (select id as answer_id, body, date_written as date, answerer_name, helpful as helpfulness, COALESCE(((select array_agg(ph) from (select id, url from photos where answer_id = answers.id)ph )), '{}') as photos from answers where question_id = questions.id and reported = false ORDER BY id) answers ) as answers from questions where product_id = ${req.query.product_id} and reported = false order by id limit ${count}) as questions;`, (err, data) => {
     if (err) {
       throw err;
     }
@@ -44,7 +44,6 @@ app.get('/qa/questions/', (req, res) => {
       product_id: req.query.product_id,
       results: data.rows[0].results
     };
-
     res.send(results);
   });
 });
@@ -52,7 +51,7 @@ app.get('/qa/questions/', (req, res) => {
 //get answers
 app.get('/qa/questions/:question_id/answers', (req, res) => {
   let count = req.query.count || 5;
-  pool.query(`select json_agg(answers) as results from (select id as answer_id, body, date_written as date, answerer_name, helpful as helpfulness, (select array_agg(ph) from (select id, url from photos where answer_id = answers.id)ph ) as photos from answers where question_id = ${req.params.question_id} and reported = false ORDER BY id LIMIT ${count}) as answers;`, (err, data) => {
+  pool.query(`select json_agg(answers) as results from (select id as answer_id, body, date_written as date, answerer_name, helpful as helpfulness, COALESCE(((select array_agg(ph) from (select id, url from photos where answer_id = answers.id)ph )), '{}') as photos  from answers where question_id = ${req.params.question_id} and reported = false ORDER BY id LIMIT ${count}) as answers;`, (err, data) => {
     if (err) {
       throw err;
     }
