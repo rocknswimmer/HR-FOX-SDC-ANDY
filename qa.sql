@@ -81,6 +81,8 @@ CREATE INDEX photo_index ON photos (id);
 CREATE INDEX questionID_index ON answers (question_id);
 CREATE INDEX answerID_index ON photos (answer_id);
 CREATE INDEX productID_index ON questions (product_id);
+CREATE INDEX questReported_index ON questions (reported);
+CREATE INDEX ansReported_index ON answers (reported);
 
 -- ---
 -- Foreign Keys
