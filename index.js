@@ -8,11 +8,15 @@ require('dotenv').config();
 
 const Pool = require('pg').Pool;
 const pool = new Pool({
-  user: process.env.PGUSER,
-  host: process.env.PGHOST,
-  database: process.env.PGDATABASE,
-  password: process.env.PGPASSWORD,
-  port: process.env.PGPORT,
+  // user: process.env.PGUSER,
+  // host: process.env.PGHOST,
+  // database: process.env.PGDATABASE,
+  // password: process.env.PGPASSWORD,
+  // port: process.env.PGPORT,
+  user: 'andy',
+  host: 'localhost',
+  database: 'qa',
+  port: 5432,
 });
 
 app.use(bodyParser.json())
@@ -53,7 +57,7 @@ app.get('/', (request, response) => {
 // });
 // SELECT * FROM questions WHERE product_id = ${req.query.product_id} ORDER BY id LIMIT
 //get questions
-
+//
 
 app.get('/qa/questions/', (req, res) => {
   let count = req.query.count || req.params.count || 5;
