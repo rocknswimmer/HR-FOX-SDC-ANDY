@@ -15,7 +15,7 @@ const pool = new Pool({
   // port: process.env.PGPORT,
   user: 'andy',
   host: 'localhost',
-  database: 'qa',
+  database: 'postgres',
   port: 5432,
 });
 
