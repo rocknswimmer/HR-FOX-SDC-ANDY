@@ -8,15 +8,15 @@ require('dotenv').config();
 
 const Pool = require('pg').Pool;
 const pool = new Pool({
-  // user: process.env.PGUSER,
-  // host: process.env.PGHOST,
-  // database: process.env.PGDATABASE,
+  user: process.env.PGUSER,
+  host: process.env.PGHOST,
+  database: process.env.PGDATABASE,
   // password: process.env.PGPASSWORD,
-  // port: process.env.PGPORT,
-  user: 'andy',
-  host: 'localhost',
-  database: 'postgres',
-  port: 5432,
+  port: process.env.PGPORT,
+  // user: 'andy',
+  // host: 'localhost',
+  // database: 'postgres',
+  // port: 5432,
 });
 
 app.use(bodyParser.json())
